@@ -1,8 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCafeDto } from './create-cafe.dto';
 
-export class UpdateCafeDto extends PartialType(CreateCafeDto) {
-    location: string;
-    name: string;
-    stamps: number; 
-}
+export class UpdateCafeDto extends PartialType(CreateCafeDto) {}

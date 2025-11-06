@@ -16,14 +16,14 @@ export class CafeService {
 			if (cafe) {
 				throw new Error('Cafe with this name already exists');
 			} else {
-				await this.prisma.cafe.create({
+				const cafe = await this.prisma.cafe.create({
 					data: {
 						name: createCafeDto.name,
 						location: createCafeDto.location,
 						stampsRequired: createCafeDto.stamps,
 					},
 				});
-				return 'This action adds a new cafe';
+				return cafe;
 			}
 		} catch (error) {
 			throw new Error('Error creating cafe: ' + error.message);
@@ -58,11 +58,7 @@ export class CafeService {
 			} else {
 				await this.prisma.cafe.update({
 					where: { id: id },
-					data: {
-						name: updateCafeDto.name,
-						location: updateCafeDto.location,
-						stampsRequired: updateCafeDto.stamps,
-					},
+					data: updateCafeDto,
 				});
 			}
 		} catch (error) {

@@ -79,18 +79,19 @@ export class UserService {
 			if (!user) {
 				throw new Error('User with id: ' + id + ' does not exists');
 			} else {
-				const hashedPassword = await bcrypt.hash(
-					updateUserDto.password,
-					10,
-				);
+				let hashedPassword: string | undefined;
+				if(updateUserDto.password){
+					hashedPassword = await bcrypt.hash(
+						updateUserDto.password,
+						10,
+					);
+				}
+
 				await this.prisma.user.update({
 					where: { id: id },
-					data: {
-						name: updateUserDto.name,
-						login: updateUserDto.login,
-						password: hashedPassword,
-						role: updateUserDto.role,
-					},
+					data: hashedPassword
+						? { ...updateUserDto, password: hashedPassword }
+						: { ...updateUserDto },
 				});
 				if (updateUserDto.role === Role.USER) {
 					await this.prisma.cafeEmployee.deleteMany({
