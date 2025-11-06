@@ -28,24 +28,24 @@ export class CafeController {
 		return this.cafeService.findAll();
 	}
 
-	@Get(':id')
-	@ApiProperty({ description: 'Get a cafe by ID' })
-	@ApiParam({ name: 'id', description: 'The ID of the cafe to retrieve' })
-	findOne(@Param('id') id: string) {
-		return this.cafeService.findOne(id);
+	@Get(':slug')
+	@ApiProperty({ description: 'Get a cafe by slug' })
+	@ApiParam({ name: 'slug', description: 'The slug of the cafe to retrieve' })
+	findOne(@Param('slug') slug: string) {
+		return this.cafeService.findOne(slug);
 	}
 
-	@Patch(':id')
-	@ApiProperty({ description: 'Update a cafe by ID' })
-	@ApiParam({ name: 'id', description: 'The ID of the cafe to update' })
-	update(@Param('id') id: string, @Body() updateCafeDto: UpdateCafeDto) {
-		return this.cafeService.update(id, updateCafeDto);
+	@Patch(':slug')
+	@ApiProperty({ description: 'Update a cafe by slug' })
+	@ApiParam({ name: 'slug', description: 'The slug of the cafe to update' })
+	update(@Param('slug') slug: string, @Body() updateCafeDto: UpdateCafeDto) {
+		return this.cafeService.update(slug, updateCafeDto);
 	}
 
-	@Delete(':id')
-	@ApiProperty({ description: 'Delete a cafe by ID' })
-	@ApiParam({ name: 'id', description: 'The ID of the cafe to delete' })
-	remove(@Param('id') id: string) {
-		return this.cafeService.remove(id);
+	@Delete(':slug')
+	@ApiProperty({ description: 'Delete a cafe by slug' })
+	@ApiParam({ name: 'slug', description: 'The slug of the cafe to delete' })
+	remove(@Param('slug') slug: string) {
+		return this.cafeService.remove(slug);
 	}
 }

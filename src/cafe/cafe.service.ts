@@ -1,32 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { errorMonitor } from 'events';
+import slug from 'slug';
 
 @Injectable()
 export class CafeService {
 	constructor(private prisma: PrismaService) {}
 
 	async create(createCafeDto: CreateCafeDto) {
-		try {
-			const cafe = await this.prisma.cafe.findFirst({
-				where: { name: createCafeDto.name },
+		const cafe = await this.prisma.cafe.findFirst({
+			where: { name: createCafeDto.name },
+		});
+		if (cafe) {
+			throw new ConflictException('Cafe with this name already exists');
+		} else {
+			const cafe = await this.prisma.cafe.create({
+				data: {
+					slug: slug(createCafeDto.name, { lower: true }),
+					name: createCafeDto.name,
+					location: createCafeDto.location,
+					stampsRequired: createCafeDto.stamps,
+				},
 			});
-			if (cafe) {
-				throw new Error('Cafe with this name already exists');
-			} else {
-				const cafe = await this.prisma.cafe.create({
-					data: {
-						name: createCafeDto.name,
-						location: createCafeDto.location,
-						stampsRequired: createCafeDto.stamps,
-					},
-				});
-				return cafe;
-			}
-		} catch (error) {
-			throw new Error('Error creating cafe: ' + error.message);
+			return cafe;
 		}
 	}
 
@@ -38,26 +35,22 @@ export class CafeService {
 		}
 	}
 
-	async findOne(id: string) {
-		try {
-			const cafe = await this.prisma.cafe.findUnique({
-				where: { id: id },
-			});
-			if (!cafe) throw new Error('Cafe with id: ' + id + ' not found');
-			return cafe;
-		} catch (error) {
-			throw new Error('Error retrieving cafe: ' + error.message);
-		}
+	async findOne(slug: string) {
+		const cafe = await this.prisma.cafe.findUnique({
+			where: { slug },
+		});
+		if (!cafe) throw new NotFoundException('Cafe with slug: ' + slug + ' not found');
+		return cafe;
 	}
 
-	async update(id: string, updateCafeDto: UpdateCafeDto) {
+	async update(slug: string, updateCafeDto: UpdateCafeDto) {
 		try {
-			const cafe = this.findOne(id);
+			const cafe = this.findOne(slug);
 			if (!cafe) {
-				throw new Error('Cafe with id: ' + id + ' does not exists');
+				throw new Error('Cafe with slug: ' + slug + ' does not exists');
 			} else {
 				await this.prisma.cafe.update({
-					where: { id: id },
+					where: { slug },
 					data: updateCafeDto,
 				});
 			}
@@ -66,14 +59,14 @@ export class CafeService {
 		}
 	}
 
-	async remove(id: string) {
+	async remove(slug: string) {
 		try {
-			const cafe = this.findOne(id);
+			const cafe = this.findOne(slug);
 			if (!cafe) {
-				throw new Error('Cafe with id: ' + id + ' does not exists');
+				throw new Error('Cafe with slug: ' + slug + ' does not exists');
 			} else {
 				await this.prisma.cafe.delete({
-					where: { id: id },
+					where: { slug },
 				});
 			}
 		} catch (error) {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Max, MaxLength, MinLength } from 'class-validator';
+import { IsOptional, IsString, Max, MaxLength, MinLength } from 'class-validator';
 import { Role } from 'types/role';
 
 export class CreateUserDto {
@@ -37,6 +37,7 @@ export class CreateUserDto {
 	role: Role;
 
 	@IsString()
+	@IsOptional()
 	@ApiProperty({ description: 'The ID of the cafe the user belongs to' })
-	cafeId: string;
+	cafeId?: string;
 }
