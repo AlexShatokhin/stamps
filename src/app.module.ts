@@ -5,10 +5,17 @@ import { CafeModule } from './cafe/cafe.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { StampModule } from './stamp/stamp.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [CafeModule, PrismaModule, UserModule, StampModule],
-  controllers: [AppController],
-  providers: [AppService],
+	imports: [
+		CafeModule,
+		PrismaModule,
+		UserModule,
+		StampModule,
+		ConfigModule.forRoot({ isGlobal: true }),
+	],
+	controllers: [AppController],
+	providers: [AppService],
 })
 export class AppModule {}

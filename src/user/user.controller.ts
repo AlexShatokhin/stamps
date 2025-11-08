@@ -6,11 +6,14 @@ import {
 	Patch,
 	Param,
 	Delete,
+	Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiParam, ApiOperation } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -33,6 +36,15 @@ export class UserController {
 	@ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
 	findOne(@Param('id') id: string) {
 		return this.userService.findOne(id);
+	}
+
+	@Post('/login')
+	@ApiOperation({ description: 'Get user by login' })
+	login(
+		@Body() loginDto: LoginDto,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		return this.userService.login(loginDto, res);
 	}
 
 	@Patch(':id')
