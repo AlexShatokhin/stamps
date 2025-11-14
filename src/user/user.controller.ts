@@ -24,34 +24,33 @@ export class UserController {
 	constructor(private readonly userService: UserService) {}
 
 	@Post()
-	@ApiOperation({ description: 'Create a new user' })
+	@ApiOperation({ description: 'Create a new user', summary: 'Create user' })
 	create(@Body() createUserDto: CreateUserDto) {
 		return this.userService.create(createUserDto);
 	}
 
 	@Get()
-	@ApiOperation({ description: 'Get all users' })
+	@ApiOperation({ description: 'Get all users', summary: 'Get all users' })
 	findAll() {
 		return this.userService.findAll();
 	}
 
 	@RequireAuth()
 	@Get('me')
-	@ApiOperation({ description: 'Get a user by ID' })
-	@ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
+	@ApiOperation({ description: 'Get current user by bearer token', summary: 'Get current user' })
 	findMe(@Authorized('id') user: User) {
 		return user;
 	}
 
 	@Get(':id')
-	@ApiOperation({ description: 'Get a user by ID' })
+	@ApiOperation({ description: 'Get a user by ID', summary: 'Get user by ID' })
 	@ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
 	findOne(@Param('id') id: string) {
 		return this.userService.findOne(id);
 	}
 
 	@Post('/login')
-	@ApiOperation({ description: 'Get user by login' })
+	@ApiOperation({ description: 'Get user\'s access token', summary: 'Login user' })
 	login(
 		@Body() loginDto: LoginDto,
 		@Res({ passthrough: true }) res: Response,
@@ -60,7 +59,7 @@ export class UserController {
 	}
 
 	@Post('/refresh')
-	@ApiOperation({ description: 'Refresh access token' })
+	@ApiOperation({ description: 'Refresh access token', summary: 'Refresh access token' })
 	refresh(
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
@@ -69,7 +68,7 @@ export class UserController {
 	}	
 
 	@Post('/logout')
-	@ApiOperation({ description: 'Logout user' })
+	@ApiOperation({ description: 'Logout user', summary: 'Logout user' })
 	logout(
 		@Res({ passthrough: true }) res: Response,
 	) {
@@ -77,14 +76,14 @@ export class UserController {
 	}
 
 	@Patch(':id')
-	@ApiOperation({ description: 'Update a user by ID' })
+	@ApiOperation({ description: 'Update a user by ID', summary: 'Update user' })
 	@ApiParam({ name: 'id', description: 'The ID of the user to update' })
 	update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
 		return this.userService.update(id, updateUserDto);
 	}
 
 	@Delete(':id')
-	@ApiOperation({ description: 'Delete a user by ID' })
+	@ApiOperation({ description: 'Delete a user by ID', summary: 'Delete user' })
 	@ApiParam({ name: 'id', description: 'The ID of the user to delete' })
 	remove(@Param('id') id: string) {
 		return this.userService.remove(id);

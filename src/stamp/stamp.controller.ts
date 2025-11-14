@@ -9,25 +9,25 @@ export class StampController {
 	constructor(private readonly stampService: StampService) {}
 
 	@Post('/')
-	@ApiOperation({ description: 'Set stamps for a user' })
+	@ApiOperation({ description: 'Set stamps for a user', summary: 'Set stamps' })
 	setStamp(@Body() SetStampDto: SetStampDto) {
 		return this.stampService.setStamp(SetStampDto);
 	}
 
 	@Delete('/clear')
-	@ApiOperation({ description: 'Clear stamps for a user in a specific cafe' })
+	@ApiOperation({ description: 'Clear stamps for a user in a specific cafe', summary: 'Clear stamps' })
 	clearStamps(@Body() clearStampDto: ClearStampDto) {
 		return this.stampService.clearStamps(clearStampDto);
 	}
 
 	@Get('/:userId')
-	@ApiOperation({ description: 'Get all stamps for a user' })
+	@ApiOperation({ description: 'Get all stamps for a user', summary: 'Get all stamps for a user' })
 	getAllStampsByUserId(@Param('userId') userId: string) {
 		return this.stampService.getAllStampsByUserId(userId);
 	}
 
 	@Get('/:userId/:cafeId')
-	@ApiOperation({ description: 'Get stamp for a user in a specific cafe' })
+	@ApiOperation({ description: 'Get stamp for a user in a specific cafe', summary: 'Get stamp for a user in a specific cafe' })
 	getStampByUserIdAndCafeId(@Param('userId') userId: string, @Param('cafeId') cafeId: string) {
 		return this.stampService.getStampByUserIdAndCafeId(userId, cafeId);
 	}
