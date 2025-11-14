@@ -15,6 +15,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiParam, ApiOperation } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { Request, Response } from 'express';
+import { RequireAuth } from './decorators/require-auth.decorator';
+import { User } from 'generated/prisma/client';
+import { Authorized } from './decorators/authorized.decorator';
 
 @Controller('user')
 export class UserController {
@@ -30,6 +33,14 @@ export class UserController {
 	@ApiOperation({ description: 'Get all users' })
 	findAll() {
 		return this.userService.findAll();
+	}
+
+	@RequireAuth()
+	@Get('me')
+	@ApiOperation({ description: 'Get a user by ID' })
+	@ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
+	findMe(@Authorized('id') user: User) {
+		return user;
 	}
 
 	@Get(':id')
