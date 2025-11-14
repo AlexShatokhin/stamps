@@ -7,13 +7,14 @@ import {
 	Param,
 	Delete,
 	Res,
+	Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiParam, ApiOperation } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -45,6 +46,23 @@ export class UserController {
 		@Res({ passthrough: true }) res: Response,
 	) {
 		return this.userService.login(loginDto, res);
+	}
+
+	@Post('/refresh')
+	@ApiOperation({ description: 'Refresh access token' })
+	refresh(
+		@Req() req: Request,
+		@Res({ passthrough: true }) res: Response,
+	) {
+		return this.userService.refresh(req, res);
+	}	
+
+	@Post('/logout')
+	@ApiOperation({ description: 'Logout user' })
+	logout(
+		@Res({ passthrough: true }) res: Response,
+	) {
+		return this.userService.logout(res);
 	}
 
 	@Patch(':id')

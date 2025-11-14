@@ -13,7 +13,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoginDto } from './dto/login.dto';
 import { getInMs } from 'src/utils/get-in-ms.util';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { JwtPayload } from './interfaces/jwt.interface';
 
 @Injectable()
 export class UserService {
@@ -176,7 +177,28 @@ export class UserService {
 			throw new NotFoundException('Invalid credentials');
 		}
 
-		const { accessToken, refreshToken } = this.generateTokens(user.id);
+		return this.auth(user.id, res);
+	}
+
+	async refresh(req: Request, res: Response){
+		const refreshToken = req.cookies['refreshToken'];
+		if (!refreshToken) {
+			throw new BadRequestException('Refresh token not found');
+		}
+		const payload : JwtPayload = await this.jwt.verifyAsync(refreshToken);
+
+		const user = await this.findOne(payload.id);
+		return this.auth(user.id, res);
+	}
+
+	async logout(res: Response){
+		res.cookie('refreshToken', '', {
+			maxAge: 0
+		})
+	}
+
+	auth(id: string, res: Response) {
+		const { accessToken, refreshToken } = this.generateTokens(id);
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			domain: 'localhost',
@@ -186,7 +208,7 @@ export class UserService {
 	}
 
 	generateTokens(userId: string) {
-		const payload = { id: userId };
+		const payload : JwtPayload = { id: userId };
 
 		const accessToken = this.jwt.sign(payload, {
 			expiresIn: getInMs(this.jwtAccessExpiration),

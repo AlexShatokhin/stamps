@@ -20,6 +20,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 						'JWT_ACCESS_EXPIRATION',
 					),
 				},
+				verifyOptions: {
+					algorithms: ['HS256'],
+				}
 			}),
 			inject: [ConfigService],
 		}),
