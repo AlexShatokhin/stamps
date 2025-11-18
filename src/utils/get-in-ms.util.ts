@@ -6,13 +6,13 @@ export function getInMs(time: string): number {
 	const timeValue = parseInt(timeRange[1], 10);
 	switch (timeRange[2]) {
 		case 's':
-			return timeValue * 1000;
+			return timeValue;
 		case 'm':
-			return timeValue * 60 * 1000;
+			return timeValue * 60;
 		case 'h':
-			return timeValue * 60 * 60 * 1000;
+			return timeValue * 60 * 60;
 		case 'd':
-			return timeValue * 24 * 60 * 60 * 1000;
+			return timeValue * 24 * 60 * 60;
 		default:
 			throw new Error('Invalid time unit');
 	}

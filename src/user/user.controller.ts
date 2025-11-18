@@ -18,18 +18,23 @@ import { Request, Response } from 'express';
 import { RequireAuth } from './decorators/require-auth.decorator';
 import { User } from 'generated/prisma/client';
 import { Authorized } from './decorators/authorized.decorator';
+import { RequireRoles, Roles } from './decorators/roles.decorator';
+import { Role } from 'types/role';
 
 @Controller('user')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
+	@RequireAuth()
 	@Post()
 	@ApiOperation({ description: 'Create a new user', summary: 'Create user' })
 	create(@Body() createUserDto: CreateUserDto) {
 		return this.userService.create(createUserDto);
 	}
 
+	@RequireAuth()
 	@Get()
+	@RequireRoles(Role.SUPERADMIN)
 	@ApiOperation({ description: 'Get all users', summary: 'Get all users' })
 	findAll() {
 		return this.userService.findAll();
@@ -42,6 +47,8 @@ export class UserController {
 		return user;
 	}
 
+	@RequireAuth()
+	@Roles(Role.SUPERADMIN)
 	@Get(':id')
 	@ApiOperation({ description: 'Get a user by ID', summary: 'Get user by ID' })
 	@ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
@@ -67,6 +74,7 @@ export class UserController {
 		return this.userService.refresh(req, res);
 	}	
 
+	@RequireAuth()
 	@Post('/logout')
 	@ApiOperation({ description: 'Logout user', summary: 'Logout user' })
 	logout(
@@ -75,6 +83,7 @@ export class UserController {
 		return this.userService.logout(res);
 	}
 
+	@RequireAuth()
 	@Patch(':id')
 	@ApiOperation({ description: 'Update a user by ID', summary: 'Update user' })
 	@ApiParam({ name: 'id', description: 'The ID of the user to update' })
@@ -82,6 +91,7 @@ export class UserController {
 		return this.userService.update(id, updateUserDto);
 	}
 
+	@RequireAuth()
 	@Delete(':id')
 	@ApiOperation({ description: 'Delete a user by ID', summary: 'Delete user' })
 	@ApiParam({ name: 'id', description: 'The ID of the user to delete' })
