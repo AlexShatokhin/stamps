@@ -6,10 +6,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 @Module({
 	controllers: [UserController],
-	providers: [UserService, JwtStrategy],
+	providers: [UserService, JwtStrategy, JwtGuard, RoleGuard],
 	imports: [
 		PrismaModule,
 		PassportModule,
@@ -30,5 +32,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 			inject: [ConfigService],
 		}),
 	],
+	exports: [JwtGuard, RoleGuard, JwtStrategy]
 })
 export class UserModule {}

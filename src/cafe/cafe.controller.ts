@@ -11,6 +11,8 @@ import { CafeService } from './cafe.service';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { ApiParam, ApiOperation } from '@nestjs/swagger';
+import { RequireAuth, RequireRoles } from 'src/common/decorators';
+import { Role } from 'types/role';
 
 @Controller('cafe')
 export class CafeController {
@@ -22,6 +24,8 @@ export class CafeController {
 		return this.cafeService.create(createCafeDto);
 	}
 
+	@RequireAuth()
+	@RequireRoles(Role.USER)
 	@Get()
 	@ApiOperation({ description: 'Get all cafes', summary: 'Get all cafes' })
 	findAll() {

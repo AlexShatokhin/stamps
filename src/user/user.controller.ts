@@ -15,10 +15,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiParam, ApiOperation } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { Request, Response } from 'express';
-import { RequireAuth } from './decorators/require-auth.decorator';
 import { User } from 'generated/prisma/client';
-import { Authorized } from './decorators/authorized.decorator';
-import { RequireRoles, Roles } from './decorators/roles.decorator';
+import { RequireRoles, Roles, Authorized, RequireAuth } from '../common/decorators';
 import { Role } from 'types/role';
 
 @Controller('user')
