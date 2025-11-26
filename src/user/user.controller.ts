@@ -54,33 +54,6 @@ export class UserController {
 		return this.userService.findOne(id);
 	}
 
-	@Post('/login')
-	@ApiOperation({ description: 'Get user\'s access token', summary: 'Login user' })
-	login(
-		@Body() loginDto: LoginDto,
-		@Res({ passthrough: true }) res: Response,
-	) {
-		return this.userService.login(loginDto, res);
-	}
-
-	@Post('/refresh')
-	@ApiOperation({ description: 'Refresh access token', summary: 'Refresh access token' })
-	refresh(
-		@Req() req: Request,
-		@Res({ passthrough: true }) res: Response,
-	) {
-		return this.userService.refresh(req, res);
-	}	
-
-	@RequireAuth()
-	@Post('/logout')
-	@ApiOperation({ description: 'Logout user', summary: 'Logout user' })
-	logout(
-		@Res({ passthrough: true }) res: Response,
-	) {
-		return this.userService.logout(res);
-	}
-
 	@RequireAuth()
 	@Patch(':id')
 	@ApiOperation({ description: 'Update a user by ID', summary: 'Update user' })
