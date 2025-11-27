@@ -20,14 +20,15 @@ export class CafeController {
 
 	@Post()
 	@ApiOperation({ description: 'Create a new cafe', summary: 'Create cafe' })
+	@RequireAuth()
+	@RequireRoles(Role.SUPERADMIN, Role.ADMIN)
 	create(@Body() createCafeDto: CreateCafeDto) {
 		return this.cafeService.create(createCafeDto);
 	}
 
-	@RequireAuth()
-	@RequireRoles(Role.USER)
 	@Get()
 	@ApiOperation({ description: 'Get all cafes', summary: 'Get all cafes' })
+	@RequireAuth()
 	findAll() {
 		return this.cafeService.findAll();
 	}
@@ -35,6 +36,7 @@ export class CafeController {
 	@Get(':slug')
 	@ApiOperation({ description: 'Get a cafe by slug', summary: 'Get cafe by slug' })
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to retrieve' })
+	@RequireAuth()
 	findOne(@Param('slug') slug: string) {
 		return this.cafeService.findOne(slug);
 	}
@@ -42,6 +44,8 @@ export class CafeController {
 	@Patch(':slug')
 	@ApiOperation({ description: 'Update a cafe by slug', summary: 'Update cafe by slug' })
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to update' })
+	@RequireAuth()
+	@RequireRoles(Role.SUPERADMIN)
 	update(@Param('slug') slug: string, @Body() updateCafeDto: UpdateCafeDto) {
 		return this.cafeService.update(slug, updateCafeDto);
 	}
@@ -49,6 +53,8 @@ export class CafeController {
 	@Delete(':slug')
 	@ApiOperation({ description: 'Delete a cafe by slug', summary: 'Delete cafe by slug' })
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to delete' })
+	@RequireAuth()
+	@RequireRoles(Role.SUPERADMIN)	
 	remove(@Param('slug') slug: string) {
 		return this.cafeService.remove(slug);
 	}

@@ -8,7 +8,8 @@ import { RoleGuard } from '../common/guards/role.guard';
 
 @Module({
 	controllers: [UserController],
-	providers: [UserService, JwtStrategy, JwtGuard, RoleGuard],
+	providers: [UserService, JwtGuard, RoleGuard],
 	imports: [PrismaModule],
+	exports: [UserService]
 })
 export class UserModule {}

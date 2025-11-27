@@ -52,7 +52,6 @@ export class AuthService {
             throw new ForbiddenException("")
 
         return await this.auth(user.id, res);
-
     }
     async generateTokens(id: string){
         const payload : JwtPayload = {id};
