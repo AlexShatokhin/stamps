@@ -32,7 +32,7 @@ export class AuthService {
         const {accessToken, refreshToken} = await this.generateTokens(id);
         res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
-			domain: 'localhost',
+			domain: '10.251.110.12',
 			maxAge: getInMs(this.jwtRefreshExpiration),
 		});
 		return accessToken;
