@@ -21,8 +21,6 @@ export class UserController {
 	
 	@Post()
 	@ApiOperation({ description: 'Create a new user', summary: 'Create user' })
-	@RequireAuth()
-	@RequireRoles(Role.SUPERADMIN, Role.ADMIN)
 	create(@Body() createUserDto: CreateUserDto) {
 		return this.userService.create(createUserDto);
 	}
