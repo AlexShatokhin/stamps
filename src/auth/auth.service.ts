@@ -32,9 +32,8 @@ export class AuthService {
         const {accessToken, refreshToken} = await this.generateTokens(id);
         res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
-			maxAge: Date.now() + getInMs(this.jwtRefreshExpiration),
+			maxAge: getInMs(this.jwtRefreshExpiration),
             sameSite: "lax",
-            secure: false,
             path: "/",
 		});
 		return accessToken;
@@ -59,10 +58,10 @@ export class AuthService {
         const payload : JwtPayload = {id};
 
         const accessToken = await this.jwt.signAsync(payload, {
-            expiresIn: Date.now() + getInMs(this.jwtAccessExpiration)
+            expiresIn: getInMs(this.jwtAccessExpiration)
         });
         const refreshToken = await this.jwt.signAsync(payload, {
-            expiresIn: Date.now() + getInMs(this.jwtRefreshExpiration)
+            expiresIn: getInMs(this.jwtRefreshExpiration)
         })
 
         return {accessToken, refreshToken}
@@ -70,7 +69,6 @@ export class AuthService {
 
     async refreshTokens(req : Request, res : Response){
         const refreshToken = req.cookies["refreshToken"];
-        console.log(req.cookies)
         const payload : JwtPayload = await this.jwt.verifyAsync(refreshToken);
 
         return this.auth(payload.id, res)
