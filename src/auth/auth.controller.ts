@@ -22,7 +22,6 @@ export class AuthController {
     return this.authService.logout(res);
   }
 
-  @RequireAuth()
   @Post("/refresh")
   @ApiOperation({ description: 'Refresh access token', summary: 'Refresh access token' })
   refresh(@Req() req : Request, @Res({passthrough: true}) res : Response){
