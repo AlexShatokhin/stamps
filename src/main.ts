@@ -4,12 +4,24 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { LoggingInterceptor } from './common/interceptors';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule, {cors: {origin: "http://10.251.110.12:3000",credentials: true}});
+	const app = await NestFactory.create(AppModule, 
+		{cors: 
+			{
+				origin: [
+					"http://10.251.110.12:3000",
+					"http://localhost:3000"
+				],
+				credentials: true
+			}
+		});
 
+	app.useGlobalInterceptors(new LoggingInterceptor())
 	app.useGlobalPipes(new ValidationPipe());
 	app.use(cookieParser());
+	
 	const config = new DocumentBuilder()
 		.setTitle('Stamps api')
 		.setDescription('API для управления штампами и кафе')
