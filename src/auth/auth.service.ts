@@ -46,11 +46,11 @@ export class AuthService {
             }
         });
         if(!user)
-            throw new NotFoundException("")
+            throw new NotFoundException("Пользователя с таким логином не существует")
 
         const isPasswordRight = await bcrypt.compare(password, user.password);
         if(!isPasswordRight)
-            throw new ForbiddenException("")
+            throw new ForbiddenException("Логин или пароль указан неверно")
 
         return await this.auth(user.id, res);
     }
@@ -78,6 +78,7 @@ export class AuthService {
         res.cookie("refreshToken", '', {
             maxAge: 0
         })
+        return true;
     }
 
 }
