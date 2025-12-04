@@ -89,11 +89,20 @@ export class UserService {
 	async findOne(id: string) {
 		const user = await this.prisma.user.findUnique({
 			where: { id },
+			include: {
+				UserStamp: true
+			}
 		});
 		if (!user) {
 			throw new NotFoundException('User not found');
 		}
-		return user;
+		return {
+			id: user.id,
+			name: user.name,
+			login: user.login,
+			role: user.role,
+			stamps: user.UserStamp
+		};
 	}
 
 	async update(id: string, updateUserDto: UpdateUserDto) {

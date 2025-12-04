@@ -38,6 +38,13 @@ export class CafeService {
 	async findOne(slug: string) {
 		const cafe = await this.prisma.cafe.findUnique({
 			where: { slug },
+			select: {
+				id: true,
+				slug: true,
+				name: true,
+				location: true,
+				stampsRequired: true
+			}
 		});
 		if (!cafe) throw new NotFoundException('Cafe with slug: ' + slug + ' not found');
 		return cafe;

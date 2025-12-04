@@ -1,6 +1,5 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from "bcrypt"
 import { JwtPayload } from './interfaces/jwt.interface';
@@ -11,7 +10,6 @@ import { Request, Response } from 'express';
 
 @Injectable()
 export class AuthService {
-    private jwtSecret : string;
     private jwtAccessExpiration : string;
     private jwtRefreshExpiration : string;
 
@@ -19,7 +17,6 @@ export class AuthService {
         private prisma : PrismaService,
         private jwt: JwtService,
         private config: ConfigService) {
-            this.jwtSecret = this.config.getOrThrow('JWT_SECRET');
             this.jwtAccessExpiration = this.config.getOrThrow(
                 'JWT_ACCESS_EXPIRATION',
             );
@@ -80,5 +77,4 @@ export class AuthService {
         })
         return true;
     }
-
 }
