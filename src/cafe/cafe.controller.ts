@@ -13,18 +13,11 @@ import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { ApiParam, ApiOperation } from '@nestjs/swagger';
 import { RequireAuth, RequireRoles } from 'src/common/decorators';
 import { Role } from 'types/role';
+import { LinkWithCafeDto } from './dto/link-with-cafe.dto';
 
 @Controller('cafe')
 export class CafeController {
 	constructor(private readonly cafeService: CafeService) {}
-
-	@Post()
-	@ApiOperation({ description: 'Create a new cafe', summary: 'Create cafe' })
-	@RequireAuth()
-	@RequireRoles(Role.SUPERADMIN, Role.ADMIN)
-	create(@Body() createCafeDto: CreateCafeDto) {
-		return this.cafeService.create(createCafeDto);
-	}
 
 	@Get()
 	@ApiOperation({ description: 'Get all cafes', summary: 'Get all cafes' })
@@ -39,6 +32,22 @@ export class CafeController {
 	@RequireAuth()
 	findOne(@Param('slug') slug: string) {
 		return this.cafeService.findOne(slug);
+	}
+
+	@Post()
+	@ApiOperation({ description: 'Create a new cafe', summary: 'Create cafe' })
+	@RequireAuth()
+	@RequireRoles(Role.SUPERADMIN, Role.ADMIN)
+	create(@Body() createCafeDto: CreateCafeDto) {
+		return this.cafeService.create(createCafeDto);
+	}
+	
+	@Post("/link")
+	@ApiOperation({description: "", summary: ""})
+	@RequireAuth()
+	@RequireRoles(Role.SUPERADMIN, Role.ADMIN, Role.BARISTA)
+	linkWithCafe(@Body() body: LinkWithCafeDto ){
+		return this.cafeService.link(body)
 	}
 
 	@Patch(':slug')

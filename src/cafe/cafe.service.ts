@@ -3,10 +3,15 @@ import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import slug from 'slug';
+import { LinkWithCafeDto } from './dto/link-with-cafe.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class CafeService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private user: UserService
+	) {}
 
 	async create(createCafeDto: CreateCafeDto) {
 		const cafe = await this.prisma.cafe.findFirst({
@@ -79,5 +84,19 @@ export class CafeService {
 		} catch (error) {
 			throw new Error('Error removing cafe: ' + error.message);
 		}
+	}
+
+	async link({cafeSlug, userId}: LinkWithCafeDto){
+		const user = await this.user.findOne(userId);
+		const cafe = await this.findOne(cafeSlug);
+
+		const link = await this.prisma.cafeEmployee.create({
+			data: {
+				userId: user.id,
+				cafeId: cafe.id
+			}
+		});
+
+		return link;
 	}
 }
