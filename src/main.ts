@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { LoggingInterceptor } from './common/interceptors';
+import { FileSizeValidationPipe } from './common/pipes/file-size.pipe';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, 
@@ -19,7 +20,7 @@ async function bootstrap() {
 		});
 
 	app.useGlobalInterceptors(new LoggingInterceptor())
-	app.useGlobalPipes(new ValidationPipe());
+	app.useGlobalPipes(new ValidationPipe(), new FileSizeValidationPipe());
 	app.use(cookieParser());
 	
 	const config = new DocumentBuilder()

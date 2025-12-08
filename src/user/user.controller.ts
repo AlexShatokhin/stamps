@@ -6,6 +6,8 @@ import {
 	Patch,
 	Param,
 	Delete,
+	UseInterceptors,
+	UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,6 +16,7 @@ import { ApiParam, ApiOperation } from '@nestjs/swagger';
 import { User } from 'generated/prisma/client';
 import { RequireRoles                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           , Authorized, RequireAuth } from '../common/decorators';
 import { Role } from 'types/role';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -23,6 +26,12 @@ export class UserController {
 	@ApiOperation({ description: 'Create a new user', summary: 'Create user' })
 	create(@Body() createUserDto: CreateUserDto) {
 		return this.userService.create(createUserDto);
+	}
+
+	@Post("file")
+	@UseInterceptors(FileInterceptor("file"))
+	uploadFile(@UploadedFile() file : Express.Multer.File){
+		return this.userService.uploadImage(file);
 	}
 
 	@Get()

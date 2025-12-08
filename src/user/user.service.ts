@@ -9,6 +9,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'types/role';
+import fs from "fs"
+import path from 'path';
 
 @Injectable()
 export class UserService {
@@ -149,5 +151,10 @@ export class UserService {
 		} catch (error) {
 			throw new Error('Error removing user: ' + error.message);
 		}
+	}
+
+	uploadImage(file : Express.Multer.File) {
+		const extension = file.mimetype.split("/")[1]
+		fs.writeFileSync("./images/" + file.originalname.split(".")[0] + "." + extension, file.buffer)
 	}
 }
