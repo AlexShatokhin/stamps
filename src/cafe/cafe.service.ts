@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+	ConflictException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -10,7 +14,7 @@ import { UserService } from 'src/user/user.service';
 export class CafeService {
 	constructor(
 		private prisma: PrismaService,
-		private user: UserService
+		private user: UserService,
 	) {}
 
 	async create(createCafeDto: CreateCafeDto) {
@@ -48,10 +52,13 @@ export class CafeService {
 				slug: true,
 				name: true,
 				location: true,
-				stampsRequired: true
-			}
+				stampsRequired: true,
+			},
 		});
-		if (!cafe) throw new NotFoundException('Cafe with slug: ' + slug + ' not found');
+		if (!cafe)
+			throw new NotFoundException(
+				'Cafe with slug: ' + slug + ' not found',
+			);
 		return cafe;
 	}
 
@@ -86,17 +93,34 @@ export class CafeService {
 		}
 	}
 
-	async link({cafeSlug, userId}: LinkWithCafeDto){
+	async link({ cafeSlug, userId }: LinkWithCafeDto) {
 		const user = await this.user.findOne(userId);
 		const cafe = await this.findOne(cafeSlug);
 
 		const link = await this.prisma.cafeEmployee.create({
 			data: {
 				userId: user.id,
-				cafeId: cafe.id
-			}
+				cafeId: cafe.id,
+			},
 		});
 
 		return link;
+	}
+
+	async getCafeEmployees(slug: string) {
+		const cafe = await this.findOne(slug);
+		const employees = await this.prisma.cafeEmployee.findMany({
+			where: {
+				cafeId: cafe.id,
+			},
+			include: {
+				user: true,
+			},
+		});
+
+		return employees.map((item) => ({
+			name: item.user.name,
+			id: item.user.id,
+		}));
 	}
 }

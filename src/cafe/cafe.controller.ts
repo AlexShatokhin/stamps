@@ -27,11 +27,25 @@ export class CafeController {
 	}
 
 	@Get(':slug')
-	@ApiOperation({ description: 'Get a cafe by slug', summary: 'Get cafe by slug' })
+	@ApiOperation({
+		description: 'Get a cafe by slug',
+		summary: 'Get cafe by slug',
+	})
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to retrieve' })
 	@RequireAuth()
 	findOne(@Param('slug') slug: string) {
 		return this.cafeService.findOne(slug);
+	}
+
+	@Get(':slug/employees')
+	@ApiOperation({
+		description: 'Get a cafe employees by slug',
+		summary: 'Get cafe employees by slug',
+	})
+	@ApiParam({ name: 'slug', description: 'The slug of the cafe to retrieve' })
+	@RequireAuth()
+	getCafeEmployees(@Param('slug') slug: string) {
+		return this.cafeService.getCafeEmployees(slug);
 	}
 
 	@Post()
@@ -41,17 +55,20 @@ export class CafeController {
 	create(@Body() createCafeDto: CreateCafeDto) {
 		return this.cafeService.create(createCafeDto);
 	}
-	
-	@Post("/link")
-	@ApiOperation({description: "", summary: ""})
+
+	@Post('/link')
+	@ApiOperation({ description: '', summary: '' })
 	@RequireAuth()
 	@RequireRoles(Role.SUPERADMIN, Role.ADMIN, Role.BARISTA)
-	linkWithCafe(@Body() body: LinkWithCafeDto ){
-		return this.cafeService.link(body)
+	linkWithCafe(@Body() body: LinkWithCafeDto) {
+		return this.cafeService.link(body);
 	}
 
 	@Patch(':slug')
-	@ApiOperation({ description: 'Update a cafe by slug', summary: 'Update cafe by slug' })
+	@ApiOperation({
+		description: 'Update a cafe by slug',
+		summary: 'Update cafe by slug',
+	})
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to update' })
 	@RequireAuth()
 	@RequireRoles(Role.SUPERADMIN)
@@ -60,10 +77,13 @@ export class CafeController {
 	}
 
 	@Delete(':slug')
-	@ApiOperation({ description: 'Delete a cafe by slug', summary: 'Delete cafe by slug' })
+	@ApiOperation({
+		description: 'Delete a cafe by slug',
+		summary: 'Delete cafe by slug',
+	})
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to delete' })
 	@RequireAuth()
-	@RequireRoles(Role.SUPERADMIN)	
+	@RequireRoles(Role.SUPERADMIN)
 	remove(@Param('slug') slug: string) {
 		return this.cafeService.remove(slug);
 	}

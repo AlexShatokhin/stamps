@@ -9,12 +9,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'types/role';
-import fs from "fs"
+import fs from 'fs';
 import path from 'path';
 
 @Injectable()
 export class UserService {
-
 	constructor(private prisma: PrismaService) {}
 
 	async create(createUserDto: CreateUserDto) {
@@ -92,8 +91,8 @@ export class UserService {
 		const user = await this.prisma.user.findUnique({
 			where: { id },
 			include: {
-				UserStamp: true
-			}
+				UserStamp: true,
+			},
 		});
 		if (!user) {
 			throw new NotFoundException('User not found');
@@ -103,8 +102,23 @@ export class UserService {
 			name: user.name,
 			login: user.login,
 			role: user.role,
-			stamps: user.UserStamp
+			stamps: user.UserStamp,
 		};
+	}
+
+	async getCafeByUserId(id: string) {
+		const user = await this.findOne(id);
+		if (user) {
+			const cafeId = await this.prisma.cafeEmployee.findFirst({
+				where: { userId: user.id },
+			});
+			if (!cafeId)
+				throw new NotFoundException('Cafe with this user id not found');
+
+			return await this.prisma.cafe.findUnique({
+				where: { id: cafeId.cafeId },
+			});
+		}
 	}
 
 	async update(id: string, updateUserDto: UpdateUserDto) {
@@ -153,8 +167,11 @@ export class UserService {
 		}
 	}
 
-	uploadImage(file : Express.Multer.File) {
-		const extension = file.mimetype.split("/")[1]
-		fs.writeFileSync("./images/" + file.originalname.split(".")[0] + "." + extension, file.buffer)
+	uploadImage(file: Express.Multer.File) {
+		const extension = file.mimetype.split('/')[1];
+		fs.writeFileSync(
+			'./images/' + file.originalname.split('.')[0] + '.' + extension,
+			file.buffer,
+		);
 	}
 }
