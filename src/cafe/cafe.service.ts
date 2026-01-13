@@ -121,6 +121,8 @@ export class CafeService {
 		return employees.map((item) => ({
 			name: item.user.name,
 			id: item.user.id,
+			isActive: item.user.active,
+			role: item.user.role
 		}));
 	}
 }
