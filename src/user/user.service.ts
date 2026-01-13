@@ -103,6 +103,7 @@ export class UserService {
 			login: user.login,
 			role: user.role,
 			stamps: user.UserStamp,
+			isActive: user.active
 		};
 	}
 
