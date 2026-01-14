@@ -71,7 +71,7 @@ export class CafeController {
 	})
 	@ApiParam({ name: 'slug', description: 'The slug of the cafe to update' })
 	@RequireAuth()
-	@RequireRoles(Role.SUPERADMIN)
+	@RequireRoles(Role.SUPERADMIN, Role.ADMIN)
 	update(@Param('slug') slug: string, @Body() updateCafeDto: UpdateCafeDto) {
 		return this.cafeService.update(slug, updateCafeDto);
 	}

@@ -62,7 +62,7 @@ export class CafeService {
 		return cafe;
 	}
 
-	async update(slug: string, updateCafeDto: UpdateCafeDto) {
+	async update(slug: string, {name, location, stamps}: UpdateCafeDto) {
 		try {
 			const cafe = this.findOne(slug);
 			if (!cafe) {
@@ -70,7 +70,11 @@ export class CafeService {
 			} else {
 				await this.prisma.cafe.update({
 					where: { slug },
-					data: updateCafeDto,
+					data: {
+						name,
+						location,
+						stampsRequired: stamps
+					},
 				});
 			}
 		} catch (error) {
