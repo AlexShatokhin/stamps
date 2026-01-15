@@ -22,7 +22,7 @@ export class StampService {
             where: {userId: baristaId}
         });
 
-        if(!cafe)
+        if(cafe === null)
             throw new NotFoundException('Cafe for barista with ID: ' + baristaId + ' not found');
 
         const user = await this.prisma.user.findFirst({
@@ -32,11 +32,11 @@ export class StampService {
             throw new NotFoundException('User with ID: ' + userId + ' not found');
 
         const isStampsExists = await this.prisma.userStamp.findFirst({
-            where: {userId: userId, cafeId: cafe?.cafeId}
+            where: { userId: userId, cafeId: cafe.cafeId}
         })
         if(isStampsExists){
             result = await this.prisma.userStamp.update({
-                where: {userId: userId, cafeId: cafe?.cafeId},
+                where: {userId_cafeId: {userId: userId, cafeId: cafe.cafeId}},
                 data: {
                     stampCount: +stampCount + +isStampsExists.stampCount
                 }
@@ -85,7 +85,7 @@ export class StampService {
             throw new ForbiddenException('Not enough stamps to redeem');
 
         const updatedStamps = await this.prisma.userStamp.update({
-            where: {userId: userId, cafeId: cafeId},
+            where: {userId_cafeId: {userId: userId, cafeId: cafeId}},
             data: {
                 stampCount: +userStamp.stampCount - +cafe.stampsRequired
             }

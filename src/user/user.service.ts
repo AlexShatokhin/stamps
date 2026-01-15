@@ -107,6 +107,27 @@ export class UserService {
 		};
 	}
 
+	async findRandom(){
+		const visitors = await this.prisma.user.findMany({
+			where: {
+				role: Role.USER
+			},
+			select: {
+				name: true,
+				id: true,
+				login: true,
+				role: true
+			}
+		})
+		if (visitors.length === 0) {
+			throw new NotFoundException('No visitors found');
+		}
+		
+		const randomIndex = Math.floor(Math.random() * visitors.length);
+		return visitors[randomIndex];
+
+	}
+
 	async getCafeByUserId(id: string) {
 		const user = await this.findOne(id);
 		if (user) {

@@ -52,6 +52,15 @@ export class UserController {
 		return user;
 	}
 
+	@Get("random")
+	@ApiOperation({ description: 'Get random visitor', summary: 'Get random visitor' })
+	@RequireAuth()
+	@RequireRoles(Role.SUPERADMIN, Role.BARISTA)
+	findRandom() {
+		return this.userService.findRandom();
+	}
+
+
 	@Get(':id/cafe')
 	@ApiOperation({
 		description: 'Get a user by ID',
