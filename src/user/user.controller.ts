@@ -8,6 +8,7 @@ import {
 	Delete,
 	UseInterceptors,
 	UploadedFile,
+	Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -56,8 +57,8 @@ export class UserController {
 	@ApiOperation({ description: 'Get random visitor', summary: 'Get random visitor' })
 	@RequireAuth()
 	@RequireRoles(Role.SUPERADMIN, Role.BARISTA)
-	findRandom() {
-		return this.userService.findRandom();
+	findRandom(@Query("id") cafeId : string) {
+		return this.userService.findRandom(cafeId);
 	}
 
 
@@ -67,7 +68,7 @@ export class UserController {
 		summary: 'Get user by ID',
 	})
 	@ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
-	@RequireRoles(Role.SUPERADMIN, Role.ADMIN)
+	@RequireRoles(Role.SUPERADMIN, Role.ADMIN, Role.BARISTA)
 	getCafeByUserId(@Param('id') id: string) {
 		return this.userService.getCafeByUserId(id);
 	}

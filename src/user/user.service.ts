@@ -107,7 +107,7 @@ export class UserService {
 		};
 	}
 
-	async findRandom(){
+	async findRandom(cafeID: string){
 		const visitors = await this.prisma.user.findMany({
 			where: {
 				role: Role.USER
@@ -122,9 +122,26 @@ export class UserService {
 		if (visitors.length === 0) {
 			throw new NotFoundException('No visitors found');
 		}
+
+
 		
 		const randomIndex = Math.floor(Math.random() * visitors.length);
-		return visitors[randomIndex];
+		const visitor = visitors[randomIndex];
+
+		const visitorStamps = await this.prisma.userStamp.findFirst({
+			where: {
+				cafeId: cafeID,
+				userId: visitor.id
+			},
+			select: {
+				stampCount: true
+			}
+		})
+
+		return {
+			...visitor,
+			stamps: visitorStamps?.stampCount || 0
+		}
 
 	}
 
