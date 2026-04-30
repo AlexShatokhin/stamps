@@ -12,7 +12,6 @@ async function bootstrap() {
 		{cors: 
 			{
 				origin: [
-					"http://10.251.110.12:3000",
 					"http://localhost:3000"
 				],
 				credentials: true
